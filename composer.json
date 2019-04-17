@@ -12,8 +12,7 @@
         "slim/slim": "^2.6.3",
         "slim/views": "^0.1.0",
         "twig/twig": "~1.17",
-        "pimple/pimple": "^1.0.2",
-        "perftools/xhgui-collector": "^1.4.0"
+        "pimple/pimple": "^1.0.2"
     },
     "require-dev": {
         "alcaeus/mongo-php-adapter": "^1.1",
@@ -22,7 +21,8 @@
     },
     "scripts": {
         "test": "phpunit",
-        "cover": "phpunit --coverage-clover=unittest-coverage.clover"
+        "cover": "phpunit --coverage-clover=unittest-coverage.clover",
+        "start": "php -S localhost:8000 -t webroot/"
     },
     "suggest": {
         "ext-xhprof": "You need to install either xhprof or uprofiler to use XHGui.",

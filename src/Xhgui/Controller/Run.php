@@ -48,6 +48,7 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'projection' => true,
         ));
 
+
         $title = 'Recent runs';
         $titleMap = array(
             'wt' => 'Longest wall time',

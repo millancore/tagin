@@ -1,4 +1,7 @@
 <?php
+
+define('TAJIN_HEADER', dirname(__DIR__));
+
 // Use the config directory defined in the xhgui application.
 define('XHGUI_CONFIG_DIR', dirname(__DIR__) . '/config/');
 
@@ -6,4 +9,4 @@ define('XHGUI_CONFIG_DIR', dirname(__DIR__) . '/config/');
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 // Include collector script.
-require_once dirname(__DIR__) . '/vendor/perftools/xhgui-collector/external/header.php';
+require_once dirname(__DIR__) . '/src/collector/external/header.php';

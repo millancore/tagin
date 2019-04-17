@@ -17,7 +17,8 @@ return array(
     //     # to reduce locking problems (eg uniqid, time ...)
     //     'save.handler.filename' => __DIR__.'/../data/xhgui_'.date('Ymd').'.dat',
     //
-    'save.handler' => 'mongodb',
+    'save.handler' => 'file',
+    'save.handler.filename' => __DIR__.'/../data/tajin_'.date('Ymd').'.dat',
 
     // Database options for MongoDB.
     //
@@ -53,7 +54,7 @@ return array(
     //     },
     //
     'profiler.enable' => function() {
-        return rand(1, 100) === 42;
+        return true;
     },
 
     // Transformation for the "simple" variant of the URL.
