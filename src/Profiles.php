@@ -1,17 +1,22 @@
 <?php
+
+namespace Tagin;
+
+use MongoDB\Database;
+use Tagin\Db\Mapper;
+
 /**
  * Contains logic for getting/creating/removing profile records.
  */
-class Xhgui_Profiles
+class Profiles
 {
     protected $_collection;
-
     protected $_mapper;
 
-    public function __construct(MongoDb $db)
+    public function __construct(Database $db)
     {
         $this->_collection = $db->results;
-        $this->_mapper = new Xhgui_Db_Mapper();
+        $this->_mapper = new Mapper();
     }
 
     /**
@@ -21,9 +26,11 @@ class Xhgui_Profiles
      */
     public function latest()
     {
-        $cursor = $this->_collection->find()
-            ->sort(array('meta.request_date' => -1))
-            ->limit(1);
+        $cursor = $this->_collection->find([], [
+            'sort' => ['meta.request_date' => -1],
+            'limit' => 1
+        ]);
+
         $result = $cursor->getNext();
         return $this->_wrap($result);
     }
@@ -70,9 +77,13 @@ class Xhgui_Profiles
     {
         $opts = $this->_mapper->convert($options);
 
-        $totalRows = $this->_collection->find(
-            $opts['conditions'],
-            array('_id' => 1))->count();
+        $cursor = $this->_collection->find($opts['conditions'], ['_id' => 1]);
+
+        $totalRows = 0;
+
+        foreach ($cursor as $document) {
+            $totalRows++;
+        }
 
         $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
         $page = 1;
@@ -90,15 +101,18 @@ class Xhgui_Profiles
         }
 
         if ($projection === false) {
-            $cursor = $this->_collection->find($opts['conditions'])
-                ->sort($opts['sort'])
-                ->skip((int)($page - 1) * $opts['perPage'])
-                ->limit($opts['perPage']);
+            $cursor = $this->_collection->find($opts['conditions'], [
+                'sort' => $opts['sort'],
+                'skip' => (int)($page - 1) * $opts['perPage'],
+                'limit' => $opts['perPage']
+            ]);
         } else {
-            $cursor = $this->_collection->find($opts['conditions'], $projection)
-                ->sort($opts['sort'])
-                ->skip((int)($page - 1) * $opts['perPage'])
-                ->limit($opts['perPage']);
+            $cursor = $this->_collection->find($opts['conditions'], array_merge([
+                'sort' => $opts['sort'],
+                'skip' => (int)($page - 1) * $opts['perPage'],
+                'limit' => $opts['perPage']],
+                $projection)
+            );
         }
 
         return array(
@@ -300,16 +314,18 @@ class Xhgui_Profiles
     protected function _wrap($data)
     {
         if ($data === null) {
-            throw new Exception('No profile data found.');
+            throw new \Exception('No profile data found.');
         }
 
         if (is_array($data)) {
-            return new Xhgui_Profile($data);
+            return new Profile($data);
         }
         $results = array();
         foreach ($data as $row) {
-            $results[] = new Xhgui_Profile($row);
+            $results[] = new Profile($row);
         }
+
+
         return $results;
     }
 }

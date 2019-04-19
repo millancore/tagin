@@ -1,8 +1,10 @@
 <?php
 
+namespace Tagin\Controller;
+
 use Slim\Slim;
 
-class Xhgui_Controller_Custom extends Xhgui_Controller
+class CustomController extends Controller
 {
     /**
      * @var Xhgui_Profiles

@@ -1,6 +1,10 @@
 <?php
 
-class Xhgui_Saver_File implements Xhgui_Saver_Interface
+namespace Tagin\Saver;
+
+use Tagin\Contract\SaverContract;
+
+class File implements SaverContract
 {
     private $_file;
 

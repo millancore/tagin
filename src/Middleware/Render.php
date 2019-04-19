@@ -1,7 +1,8 @@
 <?php
-use Slim\Middleware;
 
-class Xhgui_Middleware_Render extends Middleware
+namespace Tagin\Middleware;
+
+class Render
 {
     public function call()
     {

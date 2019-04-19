@@ -1,6 +1,13 @@
 <?php
 
-class Xhgui_Twig_Extension extends Twig_Extension
+namespace Tagin\Twig;
+
+use Tagin\Util;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+
+class Extension extends AbstractExtension
 {
     protected $_app;
 
@@ -17,23 +24,21 @@ class Xhgui_Twig_Extension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'url' => new Twig_Function_Method($this, 'url'),
-            'static' => new Twig_Function_Method($this, 'staticUrl'),
-            'percent' => new Twig_Function_Method($this, 'makePercent', array(
-                'is_safe' => array('html')
-            )),
+            'url' => new TwigFunction('url', [$this, 'url']),
+            'static' => new TwigFunction('static', [$this, 'staticUrl']),
+            'percent' => new TwigFunction('percent', [$this, 'makePercent'], ['is_safe' => ['html']]),
         );
     }
 
     public function getFilters()
     {
         return array(
-            'simple_url' => new Twig_Filter_Function('Xhgui_Util::simpleUrl'),
-            'as_bytes' => new Twig_Filter_Method($this, 'formatBytes', array('is_safe' => array('html'))),
-            'as_time' => new Twig_Filter_Method($this, 'formatTime', array('is_safe' => array('html'))),
-            'as_diff' => new Twig_Filter_Method($this, 'formatDiff', array('is_safe' => array('html'))),
-            'as_percent' => new Twig_Filter_Method($this, 'formatPercent', array('is_safe' => array('html'))),
-            'truncate' => new Twig_Filter_Method($this, 'truncate'),
+            'simple_url' => new TwigFilter('simple_url', [Util::class, 'simpleUrl']),
+            'as_bytes' => new TwigFilter('as_bytes', [$this, 'formatBytes'], array('is_safe' => array('html'))),
+            'as_time' => new TwigFilter('as_time', [$this, 'formatTime'], array('is_safe' => array('html'))),
+            'as_diff' => new TwigFilter('as_diff', [$this, 'formatDiff'], array('is_safe' => array('html'))),
+            'as_percent' => new TwigFilter('as_percent', [$this, 'formatPercent'], array('is_safe' => array('html'))),
+            'truncate' => new TwigFilter('truncate', [$this, 'truncate']),
         );
     }
 
@@ -67,7 +72,8 @@ class Xhgui_Twig_Extension extends Twig_Extension
         if (!empty($queryargs)) {
             $query = '?' . http_build_query($queryargs);
         }
-        return $this->_app->urlFor($name)  . $query;
+
+        return $this->_app->getContainer()->get('router')->pathFor($name)  . $query;
     }
 
     /**
@@ -78,7 +84,8 @@ class Xhgui_Twig_Extension extends Twig_Extension
      */
     public function staticUrl($url)
     {
-        $rootUri = $this->_app->request()->getRootUri();
+        // Todo: Resolver URI
+        $rootUri = 'http://localhost:8000';
 
         // Get URL part prepending index.php
         $indexPos = strpos($rootUri, 'index.php');

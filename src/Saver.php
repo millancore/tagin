@@ -1,11 +1,14 @@
 <?php
+
+namespace Tagin;
+
 /**
  * A small factory to handle creation of the profile saver instance.
  *
  * This class only exists to handle cases where an incompatible version of pimple
  * exists in the host application.
  */
-class Xhgui_Saver
+class Saver
 {
     /**
      * Get a saver instance based on configuration data.

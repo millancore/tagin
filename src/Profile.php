@@ -1,10 +1,13 @@
 <?php
+
+namespace Tagin;
+
 /**
  * Domain object for handling profile runs.
  *
  * Provides method to manipulate the data from a single profile run.
  */
-class Xhgui_Profile
+class Profile
 {
     /**
      * @const Key used for methods with no parent
@@ -135,7 +138,7 @@ class Xhgui_Profile
         if ($date) {
             return new DateTime('@' . $date);
         }
-        return new DateTime('now');
+        return new \DateTime('now');
     }
 
     /**
@@ -458,7 +461,7 @@ class Xhgui_Profile
      * @param Xhgui_Profile $head The other run to compare with
      * @return array An array of comparison data.
      */
-    public function compare(Xhgui_Profile $head)
+    public function compare(Profile $head)
     {
         $this->calculateSelf();
         $head->calculateSelf();
@@ -523,7 +526,7 @@ class Xhgui_Profile
     {
         $valid = array_merge($this->_keys, $this->_exclusiveKeys);
         if (!in_array($metric, $valid)) {
-            throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
+            throw new \Exception("Unknown metric '$metric'. Cannot generate callgraph.");
         }
         $this->calculateSelf();
 

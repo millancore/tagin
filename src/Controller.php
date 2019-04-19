@@ -1,16 +1,24 @@
 <?php
 
-use Slim\Slim;
+namespace Tagin;
 
-class Xhgui_Controller
+use Slim\App;
+use Slim\Container;
+
+class Controller
 {
     protected $_templateVars = array();
     protected $_template = null;
 
     /**
-     * @var Slim
+     * @var App
      */
     protected $app;
+
+    /**
+     * @var Container
+     */
+    protected $container;
 
     public function set($vars)
     {

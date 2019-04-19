@@ -1,10 +1,13 @@
 <?php
+
 require dirname(__DIR__) . '/src/bootstrap.php';
 
-$di = new Xhgui_ServiceContainer();
+use Tagin\ServiceContainer;
 
-$app = $di['app'];
+$container = new ServiceContainer();
 
-require XHGUI_ROOT_DIR . '/src/routes.php';
+$app = $container['app'];
+
+require TAGIN_ROOT . '/src/routes.php';
 
 $app->run();

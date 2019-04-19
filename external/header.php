@@ -8,5 +8,5 @@ define('XHGUI_CONFIG_DIR', dirname(__DIR__) . '/config/');
 //Include autoload
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-// Include collector script.
-require_once dirname(__DIR__) . '/src/collector/external/header.php';
+// Include Collector script.
+require_once dirname(__DIR__) . '/src/Collector/external/header.php';

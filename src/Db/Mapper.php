@@ -1,6 +1,8 @@
 <?php
 
-class Xhgui_Db_Mapper
+namespace Tagin\Db;
+
+class Mapper
 {
 
     /**

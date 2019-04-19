@@ -1,9 +1,14 @@
 <?php
-class Xhgui_WatchFunctions
+
+namespace Tagin;
+
+use MongoDB\Database;
+
+class WatchFunctions
 {
     protected $_collection;
 
-    public function __construct(MongoDb $db)
+    public function __construct(Database $db)
     {
         $this->_collection = $db->watches;
     }

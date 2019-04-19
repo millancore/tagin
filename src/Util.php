@@ -1,6 +1,8 @@
 <?php
 
-class Xhgui_Util
+namespace Tagin;
+
+class Util
 {
     /**
      * Creates a simplified URL given a standard URL.
@@ -13,7 +15,7 @@ class Xhgui_Util
      */
     public static function simpleUrl($url)
     {
-        $callable = Xhgui_Config::read('profiler.simple_url');
+        $callable = Config::read('profiler.simple_url');
         if (is_callable($callable)) {
             return call_user_func($callable, $url);
         }

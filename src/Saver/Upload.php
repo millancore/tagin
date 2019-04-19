@@ -1,8 +1,11 @@
 <?php
 
-class Xhgui_Saver_Upload implements Xhgui_Saver_Interface
-{
+namespace Tagin\Saver;
 
+use Tagin\Contract\SaverContract;
+
+class Upload implements SaverContract
+{
     protected $uri, $timeout;
 
     public function __construct($uri, $timeout)

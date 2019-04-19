@@ -1,49 +1,49 @@
 <?php
 
-use Slim\Slim;
+namespace Tagin\Controller;
 
-class Xhgui_Controller_Run extends Xhgui_Controller
+use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Tagin\Controller;
+use Tagin\Profiles;
+use Tagin\WatchFunctions;
+
+class IndexController extends Controller
 {
-    /**
-     * HTTP GET attribute name for comma separated filters
-     */
+
     const FILTER_ARGUMENT_NAME = 'filter';
     
-    /**
-     * @var Xhgui_Profiles
-     */
+
     private $profiles;
 
-    /**
-     * @var Xhgui_WatchFunctions
-     */
+
     private $watches;
 
-    public function __construct(Slim $app, Xhgui_Profiles $profiles, Xhgui_WatchFunctions $watches)
+    public function __construct(App $app, Profiles $profiles, WatchFunctions $watches)
     {
         $this->app = $app;
+        $this->container = $app->getContainer();
         $this->profiles = $profiles;
         $this->watches = $watches;
     }
 
-    public function index()
+    public function index(Request $request, Response $response)
     {
-        $request = $this->app->request();
-
         $search = array();
         $keys = array('date_start', 'date_end', 'url');
         foreach ($keys as $key) {
-            if ($request->get($key)) {
-                $search[$key] = $request->get($key);
+            if ($request->getParam($key)) {
+                $search[$key] = $request->getParam($key);
             }
         }
-        $sort = $request->get('sort');
+        $sort = $request->getParam('sort');
 
         $result = $this->profiles->getAll(array(
             'sort' => $sort,
-            'page' => $request->get('page'),
-            'direction' => $request->get('direction'),
-            'perPage' => $this->app->config('page.limit'),
+            'page' => $request->getParam('page'),
+            'direction' => $request->getParam('direction'),
+            'perPage' => $this->container['config']['page.limit'],
             'conditions' => $search,
             'projection' => true,
         ));
@@ -71,11 +71,21 @@ class Xhgui_Controller_Run extends Xhgui_Controller
             'paging' => $paging,
             'base_url' => 'home',
             'runs' => $result['results'],
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->container['config']['date.format'],
             'search' => $search,
             'has_search' => strlen(implode('', $search)) > 0,
             'title' => $title
         ));
+
+        return $this->container['view']->render($response, 'runs/list.twig', [
+            'paging' => $paging,
+            'base_url' => 'home',
+            'runs' => $result['results'],
+            'date_format' => $this->container['config']['date.format'],
+            'search' => $search,
+            'has_search' => strlen(implode('', $search)) > 0,
+            'title' => $title
+        ]);
     }
 
     public function view()

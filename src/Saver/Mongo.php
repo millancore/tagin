@@ -1,6 +1,10 @@
 <?php
 
-class Xhgui_Saver_Mongo implements Xhgui_Saver_Interface
+namespace Tagin\Saver;
+
+use Tagin\Contract\SaverContract;
+
+class Mongo implements SaverContract
 {
     /**
      * @var MongoCollection
