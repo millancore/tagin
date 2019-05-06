@@ -4,6 +4,7 @@ namespace Tagin;
 
 use Slim\App;
 use Slim\Container;
+use Slim\Http\Response;
 
 class Controller
 {
@@ -30,9 +31,20 @@ class Controller
         return $this->_templateVars;
     }
 
-    public function render()
+    public function config(string $key)
     {
-        $this->app->render($this->_template, $this->_templateVars);
+        $config = $this->container['config'];
+
+        if (isset($config[$key])) {
+            return $config[$key];
+        }
+
+        return null;
+    }
+
+    public function render(Response $response)
+    {
+        return $this->container['view']->render($response, $this->_template, $this->_templateVars);
     }
 
 }

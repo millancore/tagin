@@ -1,5 +1,5 @@
 /**
- * Render a waterfall chart into el using the data from url
+ * RenderMiddleware a waterfall chart into el using the data from url
  */
 Xhgui.waterfall = function (el, options) {
     el = d3.select(el);

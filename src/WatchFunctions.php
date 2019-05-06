@@ -2,13 +2,12 @@
 
 namespace Tagin;
 
-use MongoDB\Database;
 
 class WatchFunctions
 {
     protected $_collection;
 
-    public function __construct(Database $db)
+    public function __construct(\MongoDB $db)
     {
         $this->_collection = $db->watches;
     }

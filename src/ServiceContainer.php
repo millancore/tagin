@@ -2,14 +2,13 @@
 
 namespace Tagin;
 
-use MongoDB\Client;
 use Slim\App;
 use Tagin\Config;
 use Slim\Container;
 use Slim\Views\Twig;
 use Tagin\Controller;
-use Tagin\Twig\Extension;
-use Tagin\Middleware\Render;
+use Tagin\Twig\TwigExtension;
+use Tagin\Middleware\RenderMiddleware;
 
 class ServiceContainer extends Container
 {
@@ -48,7 +47,10 @@ class ServiceContainer extends Container
     protected function startApp()
     {
         $this['app'] = function ($container) {
-            return new App($container);
+            $app = new App($container);
+
+            // TODO: Add Render Middleware
+            return $app;
         };
 
 
@@ -58,7 +60,7 @@ class ServiceContainer extends Container
 
             $view = new Twig(TAGIN_ROOT . '/src/templates', [$cacheDir]);
 
-            $view->addExtension(new Extension($container['app']));
+            $view->addExtension(new TwigExtension($container['app']));
 
             $view->parserOptions = array(
                 'charset' => 'utf-8',
@@ -72,40 +74,6 @@ class ServiceContainer extends Container
             return $view;
         };
 
-
-        /*$this['view'] = function ($container) {
-            $cacheDir = isset($container['config']['cache']) ? $container['config']['cache'] : TAGIN_ROOT . '/cache';
-
-            // Configure Twig view for slim
-            $view = new Twig(TAGIN_ROOT.'/src/templates', [
-                $cacheDir
-            ]);
-
-            $view->parserOptions = array(
-                'charset' => 'utf-8',
-                'cache' => $cacheDir,
-                'auto_reload' => true,
-                'strict_variables' => false,
-                'autoescape' => true
-            );
-
-            return $view;
-        };
-
-        $this['app'] = function ($container) {
-            $app = new App($container['config']);
-
-            // Add renderer.
-            $app->add(new Render());
-
-            $view = $container['view'];
-            $view->parserExtensions = array(
-                new Extension($app)
-            );
-            $app->view($view);
-
-            return $app;
-        };*/
     }
 
     /**
@@ -121,7 +89,7 @@ class ServiceContainer extends Container
                 $config['db.options'] = array();
             }
 
-            $mongo = new Client($config['db.host']);
+            $mongo = new \MongoClient($config['db.host']);
             return $mongo->{$config['db.database']};
         };
 

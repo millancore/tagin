@@ -64,7 +64,7 @@ Xhgui.callgraph = function(container, data, options) {
           .rankSep(30)
           .rankDir("TB");
 
-    // Render the graph.
+    // RenderMiddleware the graph.
     var renderer = new dagreD3.Renderer()
         .layout(layout);
 

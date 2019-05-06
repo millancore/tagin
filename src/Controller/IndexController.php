@@ -67,17 +67,7 @@ class IndexController extends Controller
         );
 
         $this->_template = 'runs/list.twig';
-        $this->set(array(
-            'paging' => $paging,
-            'base_url' => 'home',
-            'runs' => $result['results'],
-            'date_format' => $this->container['config']['date.format'],
-            'search' => $search,
-            'has_search' => strlen(implode('', $search)) > 0,
-            'title' => $title
-        ));
-
-        return $this->container['view']->render($response, 'runs/list.twig', [
+        $this->set([
             'paging' => $paging,
             'base_url' => 'home',
             'runs' => $result['results'],
@@ -86,13 +76,15 @@ class IndexController extends Controller
             'has_search' => strlen(implode('', $search)) > 0,
             'title' => $title
         ]);
+
+        $this->render($response);
     }
 
-    public function view()
+    public function view(Request $request, Response $response, $args)
     {
-        $request = $this->app->request();
-        $detailCount = $this->app->config('detail.count');
-        $result = $this->profiles->get($request->get('id'));
+
+        $detailCount = $this->container['config']['detail.count'];
+        $result = $this->profiles->get($request->getParam('id'));
 
         $result->calculateSelf();
 
@@ -111,7 +103,7 @@ class IndexController extends Controller
             }
         }
 
-        if (false !== $request->get(self::FILTER_ARGUMENT_NAME, false)) {
+        if (false !== $request->getParam(self::FILTER_ARGUMENT_NAME, false)) {
             $profile = $result->sort('ewt', $result->filter($result->getProfile(), $this->getFilters()));
         } else {
             $profile = $result->sort('ewt', $result->getProfile());
@@ -124,8 +116,10 @@ class IndexController extends Controller
             'wall_time' => $timeChart,
             'memory' => $memoryChart,
             'watches' => $watchedFunctions,
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->config('date.format'),
         ));
+
+        $this->render($response);
     }
     
     /**
@@ -138,16 +132,17 @@ class IndexController extends Controller
         if (strlen($filterString) > 1 && $filterString !== 'true') {
             $filters = array_map('trim', explode(',', $filterString));
         } else {
-            $filters = $this->app->config('run.view.filter.names');
+            $filters = $this->config('run.view.filter.names');
         }
         
         return $filters;
     }
 
-    public function deleteForm()
+    public function deleteForm(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $id = $request->get('id');
+
+        $id = $request->getParam('id');
+
         if (!is_string($id) || !strlen($id)) {
             throw new Exception('The "id" parameter is required.');
         }
@@ -160,18 +155,20 @@ class IndexController extends Controller
             'run_id' => $id,
             'result' => $result,
         ));
+
+        $this->render($response);
     }
 
-    public function deleteSubmit()
+    public function deleteSubmit(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $id = $request->post('id');
+
+        $id = $request->getParam('id');
         // Don't call profilers->delete() unless $id is set,
         // otherwise it will turn the null into a MongoId and return "Sucessful".
         if (!is_string($id) || !strlen($id)) {
             // Form checks this already,
             // only reachable by handcrafted or malformed requests.
-            throw new Exception('The "id" parameter is required.');
+            throw new \Exception('The "id" parameter is required.');
         }
 
         // Delete the profile run.
@@ -199,24 +196,23 @@ class IndexController extends Controller
         $this->app->redirect($this->app->urlFor('home'));
     }
 
-    public function url()
+    public function url(Request $request, Response $response)
     {
-        $request = $this->app->request();
         $pagination = array(
-            'sort' => $request->get('sort'),
-            'direction' => $request->get('direction'),
-            'page' => $request->get('page'),
-            'perPage' => $this->app->config('page.limit'),
+            'sort' => $request->getParam('sort'),
+            'direction' => $request->getParam('direction'),
+            'page' => $request->getParam('page'),
+            'perPage' => $this->config('page.limit'),
         );
 
         $search = array();
         $keys = array('date_start', 'date_end', 'limit', 'limit_custom');
         foreach ($keys as $key) {
-            $search[$key] = $request->get($key);
+            $search[$key] = $request->getParam($key);
         }
 
         $runs = $this->profiles->getForUrl(
-            $request->get('url'),
+            $request->getParam('url'),
             $pagination,
             $search
         );
@@ -227,7 +223,7 @@ class IndexController extends Controller
 
         $chartData = $this->profiles->getPercentileForUrl(
             90,
-            $request->get('url'),
+            $request->getParam('url'),
             $search
         );
 
@@ -243,11 +239,13 @@ class IndexController extends Controller
             'paging' => $paging,
             'base_url' => 'url.view',
             'runs' => $runs['results'],
-            'url' => $request->get('url'),
+            'url' => $request->getParam('url'),
             'chart_data' => $chartData,
-            'date_format' => $this->app->config('date.format'),
-            'search' => array_merge($search, array('url' => $request->get('url'))),
+            'date_format' => $this->config('date.format'),
+            'search' => array_merge($search, array('url' => $request->getParam('url'))),
         ));
+
+        $this->render($response);
     }
 
     public function compare()
@@ -350,29 +348,28 @@ class IndexController extends Controller
         ));
     }
 
-    public function callgraph()
+    public function callgraph(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $profile = $this->profiles->get($request->get('id'));
+        $profile = $this->profiles->get($request->getParam('id'));
 
         $this->_template = 'runs/callgraph.twig';
         $this->set(array(
             'profile' => $profile,
-            'date_format' => $this->app->config('date.format'),
+            'date_format' => $this->config('date.format'),
         ));
+
+        $this->render($response);
     }
 
-    public function callgraphData()
+    public function callgraphData(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
-        $profile = $this->profiles->get($request->get('id'));
-        $metric = $request->get('metric') ?: 'wt';
-        $threshold = (float)$request->get('threshold') ?: 0.01;
+        $profile = $this->profiles->get($request->getParam('id'));
+        $metric = $request->getParam('metric') ?: 'wt';
+        $threshold = (float)$request->getParam('threshold') ?: 0.01;
+
         $callgraph = $profile->getCallgraph($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-        return $response->body(json_encode($callgraph));
+        return $response->withJson($callgraph);
     }
 
     public function callgraphDataDot()

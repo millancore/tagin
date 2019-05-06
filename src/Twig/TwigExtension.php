@@ -7,7 +7,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class Extension extends AbstractExtension
+class TwigExtension extends AbstractExtension
 {
     protected $_app;
 
@@ -85,7 +85,7 @@ class Extension extends AbstractExtension
     public function staticUrl($url)
     {
         // Todo: Resolver URI
-        $rootUri = 'http://localhost:8000';
+        $rootUri = $this->getBaseUri();
 
         // Get URL part prepending index.php
         $indexPos = strpos($rootUri, 'index.php');
@@ -128,5 +128,18 @@ class Extension extends AbstractExtension
     public function formatPercent($value)
     {
         return number_format((float)$value * 100, 0) . ' <span class="units">%</span>';
+    }
+
+
+    private function getBaseUri()
+    {
+        $protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+
+        $domain = $_SERVER['SERVER_NAME'];
+
+        $port = $_SERVER['SERVER_PORT'];
+        $disp_port = ($protocol == 'http' && $port == 80 || $protocol == 'https' && $port == 443) ? '' : ":$port";
+
+        return "${protocol}://${domain}${disp_port}";
     }
 }

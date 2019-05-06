@@ -2,6 +2,8 @@
 
 namespace Tagin\Saver;
 
+use MongoId;
+use MongoCollection;
 use Tagin\Contract\SaverContract;
 
 class Mongo implements SaverContract

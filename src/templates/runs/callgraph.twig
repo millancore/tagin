@@ -7,7 +7,7 @@
 {% block content %}
 <div class="row-fluid">
     <a class="back-link" href="{{ url('run.view', {'id': profile.id|trim}) }}">&laquo; Back to run</a>
-    <h1>Callgraph for {{ profile.meta.url }}</h1>
+    <h1>Callgraph for <span id="profile-url"> {{ profile.meta.url }} </span></h1>
     <h4>{{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}</h4>
 </div>
 
@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <p class="alert alert-info pull-left">
+    <p class="tagin-alert pull-left">
         Methods that represent <span id="threshold-display"></span>% or less of the entire execution will be omitted
     from the callgraph result.</p>
 

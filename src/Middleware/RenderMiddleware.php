@@ -2,7 +2,7 @@
 
 namespace Tagin\Middleware;
 
-class Render
+class RenderMiddleware
 {
     public function call()
     {
@@ -11,10 +11,20 @@ class Render
         // Run the controller action/route function
         $this->next->call();
 
-        // Render the template.
+
+    }
+
+
+    public function __invoke($request, $response, $next)
+    {
+        $response = $next($request, $response);
+
+        // RenderMiddleware the template.
         if (isset($app->controller)) {
             $app->controller->render();
         }
+
+        return $response;
     }
 
 }

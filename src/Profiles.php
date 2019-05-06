@@ -2,7 +2,10 @@
 
 namespace Tagin;
 
-use MongoDB\Database;
+
+use MongoDate;
+use MongoDB;
+use MongoId;
 use Tagin\Db\Mapper;
 
 /**
@@ -10,10 +13,12 @@ use Tagin\Db\Mapper;
  */
 class Profiles
 {
+
     protected $_collection;
+
     protected $_mapper;
 
-    public function __construct(Database $db)
+    public function __construct(MongoDb $db)
     {
         $this->_collection = $db->results;
         $this->_mapper = new Mapper();
@@ -26,11 +31,9 @@ class Profiles
      */
     public function latest()
     {
-        $cursor = $this->_collection->find([], [
-            'sort' => ['meta.request_date' => -1],
-            'limit' => 1
-        ]);
-
+        $cursor = $this->_collection->find()
+            ->sort(array('meta.request_date' => -1))
+            ->limit(1);
         $result = $cursor->getNext();
         return $this->_wrap($result);
     }
@@ -77,13 +80,9 @@ class Profiles
     {
         $opts = $this->_mapper->convert($options);
 
-        $cursor = $this->_collection->find($opts['conditions'], ['_id' => 1]);
-
-        $totalRows = 0;
-
-        foreach ($cursor as $document) {
-            $totalRows++;
-        }
+        $totalRows = $this->_collection->find(
+            $opts['conditions'],
+            array('_id' => 1))->count();
 
         $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
         $page = 1;
@@ -101,18 +100,15 @@ class Profiles
         }
 
         if ($projection === false) {
-            $cursor = $this->_collection->find($opts['conditions'], [
-                'sort' => $opts['sort'],
-                'skip' => (int)($page - 1) * $opts['perPage'],
-                'limit' => $opts['perPage']
-            ]);
+            $cursor = $this->_collection->find($opts['conditions'])
+                ->sort($opts['sort'])
+                ->skip((int)($page - 1) * $opts['perPage'])
+                ->limit($opts['perPage']);
         } else {
-            $cursor = $this->_collection->find($opts['conditions'], array_merge([
-                'sort' => $opts['sort'],
-                'skip' => (int)($page - 1) * $opts['perPage'],
-                'limit' => $opts['perPage']],
-                $projection)
-            );
+            $cursor = $this->_collection->find($opts['conditions'], $projection)
+                ->sort($opts['sort'])
+                ->skip((int)($page - 1) * $opts['perPage'])
+                ->limit($opts['perPage']);
         }
 
         return array(
@@ -183,7 +179,7 @@ class Profiles
                 )
             ),
             array('$sort' => array('_id' => 1)),
-            ),
+        ),
             array('cursor' => array('batchSize' => 0))
         );
 
@@ -314,7 +310,7 @@ class Profiles
     protected function _wrap($data)
     {
         if ($data === null) {
-            throw new \Exception('No profile data found.');
+            throw new Exception('No profile data found.');
         }
 
         if (is_array($data)) {
@@ -324,8 +320,6 @@ class Profiles
         foreach ($data as $row) {
             $results[] = new Profile($row);
         }
-
-
         return $results;
     }
 }

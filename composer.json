@@ -4,10 +4,11 @@
     "license": "MIT",
     "require": {
         "php": "^7.0",
+        "ext-mongodb": "*",
         "slim/slim": "^3.12",
         "twig/twig": "^2.0",
         "slim/twig-view": "^2.5",
-        "mongodb/mongodb": "^1.4"
+        "alcaeus/mongo-php-adapter": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"
@@ -19,7 +20,7 @@
     },
     "scripts": {
         "test": "phpunit",
-        "start": "php -S localhost:8000 -t webroot/"
+        "start": "php -S localhost:8080 -t webroot/"
     },
     "suggest": {
 

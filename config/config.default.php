@@ -22,7 +22,7 @@ return array(
     //     # to reduce locking problems (eg uniqid, time ...)
     //     'save.handler.filename' => __DIR__.'/../data/xhgui_'.date('Ymd').'.dat',
     //
-    'save.handler' => 'file',
+    'save.handler' => 'mongodb',
     'save.handler.filename' => __DIR__.'/../data/tajin_'.date('Ymd').'.dat',
 
     // Database options for MongoDB.

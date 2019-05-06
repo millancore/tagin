@@ -2,22 +2,36 @@
 
 // Profile Runs routes
 $app->get('/', function ($request, $response, $args) use ($container, $app) {
+
     $app->controller = $container['IndexController'];
     return $app->controller->index($request, $response);
+
 })->setName('home');
 
-$app->get('/run/view', function () use ($container, $app) {
-    $app->controller = $container['runController'];
-    $app->controller->view();
+$app->get('/run/view', function ($request, $response, $arg) use ($container, $app) {
+    $app->controller = $container['IndexController'];
+    return $app->controller->view($request, $response, $arg);
 })->setName('run.view');
 
-$app->get('/run/delete', function () use ($container, $app) {
-    $app->controller = $container['runController'];
-    $app->controller->deleteForm();
+/**
+ * Single Delete profile view
+ */
+$app->get('/run/delete', function ($request, $response ) use ($container, $app) {
+
+    $app->controller = $container['IndexController'];
+    return $app->controller->deleteForm($request, $response);
+
 })->setName('run.delete.form');
 
-$app->post('/run/delete', function () use ($container, $app) {
-    $container['runController']->deleteSubmit();
+
+/**
+ * Single Delete profile Submit
+ */
+$app->post('/run/delete', function ($request, $response) use ($container, $app) {
+
+    $app->controller = $container['IndexController'];
+    return $app->controller->deleteSubmit($request, $response);
+
 })->setName('run.delete.submit');
 
 $app->get('/run/delete_all', function () use ($container, $app) {
@@ -29,9 +43,9 @@ $app->post('/run/delete_all', function () use ($container, $app) {
     $container['runController']->deleteAllSubmit();
 })->setName('run.deleteAll.submit');
 
-$app->get('/url/view', function () use ($container, $app) {
-    $app->controller = $container['runController'];
-    $app->controller->url();
+$app->get('/url/view', function ($request, $response) use ($container, $app) {
+    $app->controller = $container['IndexController'];
+    return $app->controller->url($request, $response);
 })->setName('url.view');
 
 $app->get('/run/compare', function () use ($container, $app) {
@@ -49,13 +63,18 @@ $app->get('/run/symbol/short', function () use ($container, $app) {
     $app->controller->symbolShort();
 })->setName('run.symbol-short');
 
-$app->get('/run/callgraph', function () use ($container, $app) {
-    $app->controller = $container['runController'];
-    $app->controller->callgraph();
+$app->get('/run/callgraph', function ($request, $response) use ($container, $app) {
+
+    $app->controller = $container['IndexController'];
+    return $app->controller->callgraph($request, $response);
+
 })->setName('run.callgraph');
 
-$app->get('/run/callgraph/data', function () use ($container, $app) {
-    $container['runController']->callgraphData();
+$app->get('/run/callgraph/data', function ($request, $response) use ($container, $app) {
+
+    $app->controller = $container['IndexController'];
+    return $app->controller->callgraphData($request, $response);
+
 })->setName('run.callgraph.data');
 
 $app->get('/run/callgraph/dot', function () use ($container, $app) {

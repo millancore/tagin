@@ -33,8 +33,10 @@
 h1, h2, h3 {
     margin: 15px 0;
 }
-h1, h2, h3, h4, h5, h6,
-.nav-header,
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Consolas';
+}
+
 .brand {
     -webkit-font-smoothing: antialiased;
     font-family: 'Chunkfive';
@@ -51,31 +53,52 @@ h1, h2, h3, h4, h5, h6,
     font-family: Consolas, Menlo, Courier, monospace;
 }
 
+
+body {
+    background-color: #3c3f41;
+}
+
+
+/**
+ * Container
+ */
+#container {
+    height: 90vh;
+    color: #cbcbcb;
+}
+
+
+/**
+ * Delete
+ */
+
+ .form-actions {
+     background-color: #3c3f41;
+ }
+
+
 /**
  * Top Navbar
  */
-.navbar-inner {
-    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
-    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
-    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
+nav {
+    padding: 20px;
 }
-.navbar-static-top .navbar-inner {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+
+nav .brand {
+    color: #f3b500;
+    font-size: 1.5em;
 }
-.navbar .brand {
-    color: rgb(100, 100, 118);
+
+#nav-units {
+    text-align: right;
+    margin: 0px !important;
 }
-.navbar .nav > li > a {
-    color: #444;
+
+.nav-unit {
+    margin-left: 20px;
 }
-.navbar .brand {
-    border-right: 1px solid rgb(212, 212, 212);
-    -webkit-box-shadow: 1px 0px 1px white;
-    -moz-box-shadow: 1px 0px 1px white;
-    box-shadow: 1px 0px 1px white;
-}
+
+
 .flash {
     margin-top: 20px;
 }
@@ -104,9 +127,6 @@ h1, h2, h3, h4, h5, h6,
 .searchbar {
     margin: 10px 0;
     padding: 10px;
-    background: -webkit-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
-    background: -moz-linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
-    background: linear-gradient(rgb(247, 247, 247), rgb(240, 240, 240));
     -o-border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -154,6 +174,26 @@ h1, h2, h3, h4, h5, h6,
 /**
  * Tables
  */
+
+
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+    background-color: #1d6675;
+    color: white;
+}
+
+.table-hover tbody tr:hover td a {
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.table-hover tbody tr:hover td .units {
+    color: #f3b500;
+    font-weight: bold;
+}
+
+
 th {
     text-align: center;
 }
@@ -193,7 +233,7 @@ th.headerSortUp {
 }
 .tableFloatingHeader {
     background-color: #fff;
-    border-bottom: 1px solid rgb(217, 217, 217);
+    color: #3c3f41;
 }
 .tableFloatingHeaderOriginal th {
     border-top: none;
@@ -228,6 +268,7 @@ tr .no-results {
 .relative-box,
 .chart-container {
     position: relative;
+    background-color: white;
 }
 .popover {
     min-width: 125px;
@@ -237,9 +278,10 @@ tr .no-results {
 .chart-axis path,
 .chart-axis line {
     fill: none;
-    stroke: #666;
+    stroke: black;
     shape-rendering: crispEdges;
 }
+
 .chart-line {
     fill: none;
     stroke: steelblue;
@@ -254,6 +296,16 @@ tr .no-results {
     fill: #d46245;
 }
 
+
+/**
+ * Profiles
+ */
+
+#profile-url {
+    color: #f3b500;
+    font-size: 0.9em;
+}
+
 /**
  * Popover styles.
  */
@@ -264,6 +316,17 @@ tr .no-results {
 .popover h5:first-child {
     margin-top: 0;
 }
+
+/**
+ * Alert
+ */
+
+.tagin-alert {
+    color: #59bdd2;
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+}
+
 
 
 /**
@@ -333,6 +396,13 @@ tr .no-results {
     padding: 0 10px 10px 10px;
     overflow-y: scroll;
 }
+
+/** Buttons */
+
+.btn {
+    border-radius: 0px !important;
+}
+
 .button-close {
     position: absolute;
     top: 5px;
@@ -382,7 +452,7 @@ tr .no-results {
 .back-link {
     float: right;
     margin-top: 20px;
-    margin-left: 10px;
+    margin-left: 2px;
 }
 
 /**
@@ -404,9 +474,6 @@ tr .no-results {
     color: #999;
 }
 
-/**
- * Footer
- */
-.footer-text {
-    text-align: center;
+footer {
+    margin-top: 30px;
 }

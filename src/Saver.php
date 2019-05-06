@@ -2,6 +2,12 @@
 
 namespace Tagin;
 
+use MongoClient;
+use Tagin\Saver\File;
+use Tagin\Saver\Mongo;
+use Tagin\Saver\Upload;
+use Tagin\Contract\SaverContract;
+
 /**
  * A small factory to handle creation of the profile saver instance.
  *
@@ -14,21 +20,22 @@ class Saver
      * Get a saver instance based on configuration data.
      *
      * @param array $config The configuration data.
-     * @return Xhgui_Saver_File|Xhgui_Saver_Mongo|Xhgui_Saver_Upload
+     * @return SaverContract
      */
     public static function factory($config)
     {
+
         switch ($config['save.handler']) {
 
             case 'file':
-                return new Xhgui_Saver_File($config['save.handler.filename']);
+                return new File($config['save.handler.filename']);
 
             case 'upload':
                 $timeout = 3;
                 if (isset($config['save.handler.upload.timeout'])) {
                     $timeout = $config['save.handler.upload.timeout'];
                 }
-                return new Xhgui_Saver_Upload(
+                return new Upload(
                     $config['save.handler.upload.uri'],
                     $timeout
                 );
@@ -36,9 +43,9 @@ class Saver
             case 'mongodb':
             default:
                 $mongo = new MongoClient($config['db.host'], $config['db.options']);
-                $collection = $mongo->{$config['db.db']}->results;
+                $collection = $mongo->{$config['db.database']}->results;
                 $collection->findOne();
-                return new Xhgui_Saver_Mongo($collection);
+                return new Mongo($collection);
         }
     }
 }

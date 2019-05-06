@@ -2,6 +2,8 @@
 
 namespace Tagin;
 
+use DateTime;
+use Exception;
 /**
  * Domain object for handling profile runs.
  *
@@ -138,7 +140,7 @@ class Profile
         if ($date) {
             return new DateTime('@' . $date);
         }
-        return new \DateTime('now');
+        return new DateTime('now');
     }
 
     /**
@@ -354,7 +356,7 @@ class Profile
      * Notes:
      *  Function names are not unique, but we're merging them
      *
-     * @return Xhgui_Profile A new instance with exclusive data set.
+     * @return Profile A new instance with exclusive data set.
      */
     public function calculateSelf()
     {
@@ -401,25 +403,6 @@ class Profile
         uasort($data, $sorter);
         return $data;
     }
-    
-    /**
-     * @param array $profileData
-     * @param array $filters
-     *
-     * @return array
-     */
-    public function filter($profileData, $filters = [])
-    {
-        foreach ($filters as $key => $item) {
-            foreach ($profileData as $keyItem => $method) {
-                if (fnmatch($item, $keyItem)) {
-                    unset($profileData[ $keyItem ]);
-                }
-            }
-        }
-        
-        return $profileData;
-    }
 
     /**
      * Split a key name into the parent==>child format.
@@ -461,7 +444,7 @@ class Profile
      * @param Xhgui_Profile $head The other run to compare with
      * @return array An array of comparison data.
      */
-    public function compare(Profile $head)
+    public function compare(Xhgui_Profile $head)
     {
         $this->calculateSelf();
         $head->calculateSelf();
@@ -526,7 +509,7 @@ class Profile
     {
         $valid = array_merge($this->_keys, $this->_exclusiveKeys);
         if (!in_array($metric, $valid)) {
-            throw new \Exception("Unknown metric '$metric'. Cannot generate callgraph.");
+            throw new Exception("Unknown metric '$metric'. Cannot generate callgraph.");
         }
         $this->calculateSelf();
 

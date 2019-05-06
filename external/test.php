@@ -1,5 +1,10 @@
 <?php
 
+/** Trigger manual loader class */
+if (!defined('TAGIN_TEST')) {
+    define('TAGIN_TEST', true);
+}
+
 if (!defined('TAJIN_HEADER')) {
     define('TAJIN_HEADER', dirname(__DIR__));
 }

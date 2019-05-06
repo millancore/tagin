@@ -11,37 +11,6 @@
  * auto_prepend_file directive http://php.net/manual/en/ini.core.php#ini.auto-prepend-file
  */
 
-/* xhprof_enable()
- * See: http://php.net/manual/en/xhprof.constants.php
- *
- *
- * XHPROF_FLAGS_NO_BUILTINS
- *  Omit built in functions from return
- *  This can be useful to simplify the output, but there's some value in seeing that you've called strpos() 2000 times
- *  (disabled on PHP 5.5+ as it causes a segfault)
- *
- * XHPROF_FLAGS_CPU
- *  Include CPU profiling information in output
- *
- * XHPROF_FLAGS_MEMORY (integer)
- *  Include Memory profiling information in output
- *
- *
- * Use bitwise operators to combine, so XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY to profile CPU and Memory
- *
- */
-
-/* uprofiler support
- * The uprofiler extension is a fork of xhprof.  See: https://github.com/FriendsOfPHP/uprofiler
- *
- * The two extensions are very similar, and this script will use the uprofiler extension if it is loaded,
- * or the xhprof extension if not.  At least one of these extensions must be present.
- *
- * The UPROFILER_* constants mirror the XHPROF_* ones exactly, with one additional constant available:
- *
- * UPROFILER_FLAGS_FUNCTION_INFO (integer)
- *  Adds more information about function calls (this information is not currently used by XHGui)
- */
 
 /* Tideways support
  * The tideways extension is a fork of xhprof. See https://github.com/tideways/php-profiler-extension
@@ -55,44 +24,45 @@
  */
 
 // this file should not - under no circumstances - interfere with any other application
-if (!extension_loaded('xhprof')
-    && !extension_loaded('uprofiler')
-    && !extension_loaded('tideways')
+if (!extension_loaded('tideways')
     && !extension_loaded('tideways_xhprof')
 ) {
-    error_log('xhgui - either extension xhprof, uprofiler, tideways or tideways_xhprof must be loaded');
+    error_log('tideways or tideways_xhprof must be loaded');
     return;
 }
 
 
+/** Use the callbacks defined in the configuration file
+ * to determine whether or not Tagin should enable profiling.
+ *
+ * Only load the config class so we don't pollute the host application's autoloader.
+ */
 
-// Use the callbacks defined in the configuration file
-// to determine whether or not XHgui should enable profiling.
-//
-// Only load the config class so we don't pollute the host application's
-// autoloaders.
 $dir = dirname(__DIR__);
 
-require_once TAJIN_HEADER . '/src/Xhgui/Config.php';
+require_once TAJIN_HEADER . '/src/Config.php';
 
+if (TAGIN_TEST) {
+    require_once TAJIN_HEADER . '/src/Collector/testClassLoader.php';
+}
 
 $configDir = defined('XHGUI_CONFIG_DIR') ? XHGUI_CONFIG_DIR : $dir . '/config/';
 
 
 if (file_exists($configDir . 'config.php')) {
-    Xhgui_Config::load($configDir . 'config.php');
+    \Tagin\Config::load($configDir . 'config.php');
 } else {
-    Xhgui_Config::load($configDir . 'config.default.php');
+    \Tagin\Config::load($configDir . 'config.default.php');
 }
 
 unset($dir, $configDir);
 
-if ((!extension_loaded('mongo') && !extension_loaded('mongodb')) && Xhgui_Config::read('save.handler') === 'mongodb') {
+if ((!extension_loaded('mongo') && !extension_loaded('mongodb')) && \Tagin\Config::read('save.handler') === 'mongodb') {
     error_log('xhgui - extension mongo not loaded');
     return;
 }
 
-if (!Xhgui_Config::shouldRun()) {
+if (!\Tagin\Config::shouldRun()) {
     return;
 }
 
@@ -102,12 +72,12 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
 }
 
 
-$options = Xhgui_Config::read('profiler.options');
+$options = \Tagin\Config::read('profiler.options');
 
 if (extension_loaded('tideways_xhprof')) {
     tideways_xhprof_enable(TIDEWAYS_XHPROF_FLAGS_CPU | TIDEWAYS_XHPROF_FLAGS_MEMORY);
 } else {
-   error_log('Extension tideways_xhprof not loaded');
+   error_log('TwigExtension tideways_xhprof not loaded');
 }
 
 
@@ -138,7 +108,7 @@ register_shutdown_function(
             require TAJIN_HEADER . '/src/bootstrap.php';
         }
 
-        if (Xhgui_Config::read('fastcgi_finish_request') && function_exists('fastcgi_finish_request')) {
+        if (\Tagin\Config::read('fastcgi_finish_request') && function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
 
@@ -150,7 +120,7 @@ register_shutdown_function(
             $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
         }
         
-        $replace_url = Xhgui_Config::read('profiler.replace_url');
+        $replace_url = \Tagin\Config::read('profiler.replace_url');
         if (is_callable($replace_url)) {
             $uri = $replace_url($uri);
         }
@@ -166,7 +136,8 @@ register_shutdown_function(
             $requestTimeFloat[1] = 0;
         }
 
-        if (Xhgui_Config::read('save.handler') === 'mongodb') {
+
+        if (\Tagin\Config::read('save.handler') === 'mongodb') {
             $requestTs = new MongoDate($time);
             $requestTsMicro = new MongoDate($requestTimeFloat[0], $requestTimeFloat[1]);
         } else {
@@ -179,16 +150,17 @@ register_shutdown_function(
             'SERVER' => $_SERVER,
             'get' => $_GET,
             'env' => $_ENV,
-            'simple_url' => Xhgui_Util::simpleUrl($uri),
+            'simple_url' => \Tagin\Util::simpleUrl($uri),
             'request_ts' => $requestTs,
             'request_ts_micro' => $requestTsMicro,
             'request_date' => date('Y-m-d', $time),
         );
 
         try {
-            $config = Xhgui_Config::all();
+            $config = \Tagin\Config::all();
             $config += array('db.options' => array());
-            $saver = Xhgui_Saver::factory($config);
+
+            $saver = \Tagin\Saver::factory($config);
             $saver->save($data);
         } catch (Exception $e) {
             error_log('xhgui - ' . $e->getMessage());
