@@ -77,7 +77,7 @@ $options = \Tagin\Config::read('profiler.options');
 if (extension_loaded('tideways_xhprof')) {
     tideways_xhprof_enable(TIDEWAYS_XHPROF_FLAGS_CPU | TIDEWAYS_XHPROF_FLAGS_MEMORY);
 } else {
-   error_log('TwigExtension tideways_xhprof not loaded');
+    error_log('TwigExtension tideways_xhprof not loaded');
 }
 
 
@@ -85,7 +85,7 @@ register_shutdown_function(
     function () {
         if (extension_loaded('uprofiler')) {
             $data['profile'] = uprofiler_disable();
-        } else if (extension_loaded('tideways')) {
+        } elseif (extension_loaded('tideways')) {
             $data['profile'] = tideways_disable();
         } elseif (extension_loaded('tideways_xhprof')) {
             $data['profile'] = tideways_xhprof_disable();

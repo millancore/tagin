@@ -4,6 +4,7 @@ namespace Tagin;
 
 use DateTime;
 use Exception;
+
 /**
  * Domain object for handling profile runs.
  *
@@ -441,10 +442,10 @@ class Profile
     /**
      * Compare this run to another run.
      *
-     * @param Xhgui_Profile $head The other run to compare with
+     * @param Profile $head The other run to compare with
      * @return array An array of comparison data.
      */
-    public function compare(Xhgui_Profile $head)
+    public function compare(Profile $head)
     {
         $this->calculateSelf();
         $head->calculateSelf();

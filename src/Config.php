@@ -84,5 +84,4 @@ class Config
         }
         return (bool)$callback();
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace Tagin;
 
-
 use MongoDate;
 use MongoDB;
 use MongoId;
@@ -13,7 +12,6 @@ use Tagin\Db\Mapper;
  */
 class Profiles
 {
-
     protected $_collection;
 
     protected $_mapper;
@@ -82,7 +80,8 @@ class Profiles
 
         $totalRows = $this->_collection->find(
             $opts['conditions'],
-            array('_id' => 1))->count();
+            array('_id' => 1)
+        )->count();
 
         $totalPages = max(ceil($totalRows / $opts['perPage']), 1);
         $page = 1;
@@ -144,7 +143,8 @@ class Profiles
             $col = '$meta.request_ts';
         }
 
-        $results = $this->_collection->aggregate(array(
+        $results = $this->_collection->aggregate(
+            array(
             array('$match' => $match),
             array(
                 '$project' => array(
@@ -224,7 +224,8 @@ class Profiles
         if (isset($search['date_end'])) {
             $match['meta.request_date']['$lte'] = (string)$search['date_end'];
         }
-        $results = $this->_collection->aggregate(array(
+        $results = $this->_collection->aggregate(
+            array(
             array('$match' => $match),
             array(
                 '$project' => array(

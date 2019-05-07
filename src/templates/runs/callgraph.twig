@@ -7,7 +7,7 @@
 {% block content %}
 <div class="row-fluid">
     <a class="back-link" href="{{ url('run.view', {'id': profile.id|trim}) }}">&laquo; Back to run</a>
-    <h1>Callgraph for <span id="profile-url"> {{ profile.meta.url }} </span></h1>
+    <h2>Callgraph for <span id="profile-url"> {{ profile.meta.url }} </span></h2>
     <h4>{{ profile.meta('SERVER.REQUEST_TIME')|date(date_format) }}</h4>
 </div>
 

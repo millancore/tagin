@@ -10,8 +10,6 @@ class RenderMiddleware
 
         // Run the controller action/route function
         $this->next->call();
-
-
     }
 
 
@@ -26,5 +24,4 @@ class RenderMiddleware
 
         return $response;
     }
-
 }

@@ -46,5 +46,4 @@ class Controller
     {
         return $this->container['view']->render($response, $this->_template, $this->_templateVars);
     }
-
 }

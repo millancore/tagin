@@ -2,7 +2,6 @@
 
 namespace Tagin;
 
-
 class WatchFunctions
 {
     protected $_collection;
@@ -73,5 +72,4 @@ class WatchFunctions
     {
         $this->_collection->drop();
     }
-
 }

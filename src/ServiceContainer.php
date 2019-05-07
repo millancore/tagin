@@ -12,7 +12,6 @@ use Tagin\Middleware\RenderMiddleware;
 
 class ServiceContainer extends Container
 {
-
     protected static $_instance;
 
     public static function instance()
@@ -55,7 +54,6 @@ class ServiceContainer extends Container
 
 
         $this['view'] = function ($container) {
-
             $cacheDir = isset($container['config']['cache']) ? $container['config']['cache'] : TAGIN_ROOT . '/cache';
 
             $view = new Twig(TAGIN_ROOT . '/src/templates', [$cacheDir]);
@@ -73,7 +71,6 @@ class ServiceContainer extends Container
 
             return $view;
         };
-
     }
 
     /**
@@ -82,7 +79,6 @@ class ServiceContainer extends Container
     protected function _services()
     {
         $this['db'] = function ($container) {
-
             $config = $container['config'];
 
             if (empty($config['db.options'])) {
@@ -122,8 +118,8 @@ class ServiceContainer extends Container
             return new Xhgui_Controller_Watch($container['app'], $container['watchFunctions']);
         };
 
-        $this['IndexController'] = function ($container) {
-            return new Controller\IndexController($container['app'], $container['profiles'], $container['watchFunctions']);
+        $this['RunController'] = function ($container) {
+            return new Controller\RunController($container['app'], $container['profiles'], $container['watchFunctions']);
         };
 
         $this['customController'] = function ($container) {
@@ -138,5 +134,4 @@ class ServiceContainer extends Container
             return new Xhgui_Controller_Import($container['app'], $container['saverMongo']);
         };
     }
-
 }

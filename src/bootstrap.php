@@ -8,7 +8,6 @@ require_once TAGIN_ROOT.'/vendor/autoload.php';
 
 use Tagin\Config;
 
-
 Config::load(TAGIN_ROOT . '/config/config.default.php');
 
 

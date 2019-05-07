@@ -21,5 +21,4 @@ class Util
         }
         return preg_replace('/\=\d+/', '', $url);
     }
-
 }

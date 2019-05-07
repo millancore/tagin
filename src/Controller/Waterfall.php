@@ -61,7 +61,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
             'sort' => 'time',
             'direction' => 'asc',
             'conditions' => $search,
-            'projection' => TRUE
+            'projection' => true
         ));
         $datas = array();
         foreach ($result['results'] as $r) {
@@ -78,5 +78,4 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
         $response->body(json_encode($datas));
         $response['Content-Type'] = 'application/json';
     }
-
 }

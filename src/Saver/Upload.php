@@ -6,7 +6,8 @@ use Tagin\Contract\SaverContract;
 
 class Upload implements SaverContract
 {
-    protected $uri, $timeout;
+    protected $uri;
+    protected $timeout;
 
     public function __construct($uri, $timeout)
     {

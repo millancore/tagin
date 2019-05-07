@@ -2,5 +2,6 @@
 /composer.phar
 /tags
 /vendor/
+/.idea/
 /config/config.php
 /docker-compose.override.yml

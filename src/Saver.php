@@ -24,7 +24,6 @@ class Saver
      */
     public static function factory($config)
     {
-
         switch ($config['save.handler']) {
 
             case 'file':

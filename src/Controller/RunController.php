@@ -9,9 +9,8 @@ use Tagin\Controller;
 use Tagin\Profiles;
 use Tagin\WatchFunctions;
 
-class IndexController extends Controller
+class RunController extends Controller
 {
-
     const FILTER_ARGUMENT_NAME = 'filter';
     
 
@@ -82,7 +81,6 @@ class IndexController extends Controller
 
     public function view(Request $request, Response $response, $args)
     {
-
         $detailCount = $this->container['config']['detail.count'];
         $result = $this->profiles->get($request->getParam('id'));
 
@@ -140,7 +138,6 @@ class IndexController extends Controller
 
     public function deleteForm(Request $request, Response $response)
     {
-
         $id = $request->getParam('id');
 
         if (!is_string($id) || !strlen($id)) {
@@ -161,7 +158,6 @@ class IndexController extends Controller
 
     public function deleteSubmit(Request $request, Response $response)
     {
-
         $id = $request->getParam('id');
         // Don't call profilers->delete() unless $id is set,
         // otherwise it will turn the null into a MongoId and return "Sucessful".
@@ -248,23 +244,21 @@ class IndexController extends Controller
         $this->render($response);
     }
 
-    public function compare()
+    public function compare(Request $request, Response $response)
     {
-        $request = $this->app->request();
-
         $baseRun = $headRun = $candidates = $comparison = null;
         $paging = array();
 
-        if ($request->get('base')) {
-            $baseRun = $this->profiles->get($request->get('base'));
+        if ($request->getParam('base')) {
+            $baseRun = $this->profiles->get($request->getParam('base'));
         }
 
-        if ($baseRun && !$request->get('head')) {
+        if ($baseRun && !$request->getParam('head')) {
             $pagination = array(
-                'direction' => $request->get('direction'),
-                'sort' => $request->get('sort'),
-                'page' => $request->get('page'),
-                'perPage' => $this->app->config('page.limit'),
+                'direction' => $request->getParam('direction'),
+                'sort' => $request->getParam('sort'),
+                'page' => $request->getParam('page'),
+                'perPage' => $this->config('page.limit'),
             );
             $candidates = $this->profiles->getForUrl(
                 $baseRun->getMeta('simple_url'),
@@ -279,8 +273,8 @@ class IndexController extends Controller
             );
         }
 
-        if ($request->get('head')) {
-            $headRun = $this->profiles->get($request->get('head'));
+        if ($request->getParam('head')) {
+            $headRun = $this->profiles->get($request->getParam('head'));
         }
 
         if ($baseRun && $headRun) {
@@ -293,22 +287,23 @@ class IndexController extends Controller
             'base_run' => $baseRun,
             'head_run' => $headRun,
             'candidates' => $candidates,
-            'url_params' => $request->get(),
-            'date_format' => $this->app->config('date.format'),
+            'url_params' => $request->getParams(),
+            'date_format' => $this->config('date.format'),
             'comparison' => $comparison,
             'paging' => $paging,
             'search' => array(
-                'base' => $request->get('base'),
-                'head' => $request->get('head'),
+                'base' => $request->getParam('base'),
+                'head' => $request->getParam('head'),
             )
         ));
+
+        $this->render($response);
     }
 
-    public function symbol()
+    public function symbol(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $id = $request->get('id');
-        $symbol = $request->get('symbol');
+        $id = $request->getParam('id');
+        $symbol = $request->getParam('symbol');
 
         $profile = $this->profiles->get($id);
         $profile->calculateSelf();
@@ -323,6 +318,8 @@ class IndexController extends Controller
             'current' => $current,
             'children' => $children,
         ));
+
+        $this->render($response);
     }
 
     public function symbolShort()

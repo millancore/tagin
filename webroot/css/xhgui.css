@@ -50,6 +50,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .function-name {
+    color: #f3b500;
     font-family: Consolas, Menlo, Courier, monospace;
 }
 
@@ -71,7 +72,6 @@ body {
 /**
  * Delete
  */
-
  .form-actions {
      background-color: #3c3f41;
  }
@@ -87,6 +87,10 @@ nav {
 nav .brand {
     color: #f3b500;
     font-size: 1.5em;
+}
+
+.nav-header {
+  text-shadow: none;
 }
 
 #nav-units {
@@ -106,12 +110,23 @@ nav .brand {
 /**
  * Sidebar navs
  */
+
+#sidebar {
+    height: 100vh;
+    overflow-y: auto;
+}
+
 .sidebar-nav {
     border-right: 1px solid rgb(221, 221, 221);
 }
 .nav-list dl {
     margin: 0;
 }
+
+.nav-list > li > a {
+    text-shadow: none;
+}
+
 .sidebar-nav li a {
     display: inline;
     padding: 0;
@@ -269,6 +284,7 @@ tr .no-results {
 .chart-container {
     position: relative;
     background-color: white;
+    border-radius: 2px;
 }
 .popover {
     min-width: 125px;
@@ -472,6 +488,10 @@ tr .no-results {
 }
 .diff-same {
     color: #999;
+}
+
+.table-striped tbody > tr:nth-child(2n+1) > td, .table-striped tbody > tr:nth-child(2n+1) > th {
+    background-color: #31373b;
 }
 
 footer {

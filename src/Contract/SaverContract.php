@@ -2,8 +2,7 @@
 
 namespace Tagin\Contract;
 
-interface  SaverContract
+interface SaverContract
 {
     public function save(array $data);
-
 }

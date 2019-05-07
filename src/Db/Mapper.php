@@ -147,8 +147,7 @@ class Mapper
         } elseif ($options['sort'] == 'mu') {
             return array('profile.main().mu' => $direction);
         } elseif ($options['sort'] == 'cpu') {
-           return array('profile.main().cpu' => $direction);
+            return array('profile.main().cpu' => $direction);
         }
     }
-
 }
