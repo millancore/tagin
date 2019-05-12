@@ -16,7 +16,7 @@ System Requirements
 Install
 =======
 
-### Install Tideway
+## Install Tideway
 
 Clone from Github repository
 
@@ -35,8 +35,8 @@ Configure the extension to load with this PHP INI directive:
     extension=tideways_xhprof.so
 
 Restart Apache or PHP-FPM.
-small improvements such as dark theme and a simplified interface have been added.
-### Intall Tagin 
+
+## Install Tagin 
 
 1. Clone or download this repository.
 
