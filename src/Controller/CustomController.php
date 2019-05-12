@@ -2,16 +2,20 @@
 
 namespace Tagin\Controller;
 
-use Slim\Slim;
+use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Tagin\Controller;
+use Tagin\Profiles;
 
 class CustomController extends Controller
 {
     /**
-     * @var Xhgui_Profiles
+     * @var Profiles
      */
     protected $profiles;
 
-    public function __construct(Slim $app, Xhgui_Profiles $profiles)
+    public function __construct(App $app, Profiles $profiles)
     {
         $this->app = $app;
         $this->profiles = $profiles;
@@ -22,33 +26,31 @@ class CustomController extends Controller
         $this->_template = 'custom/create.twig';
     }
 
-    public function help()
+    public function help(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        if ($request->get('id')) {
-            $res = $this->profiles->get($request->get('id'));
+        if ($request->getParam('id')) {
+            $res = $this->profiles->get($request->getParam('id'));
         } else {
             $res = $this->profiles->latest();
         }
+
         $this->_template = 'custom/help.twig';
         $this->set(array(
             'data' => print_r($res->toArray(), 1)
         ));
+
+        $this->render($response);
     }
 
-    public function query()
+    public function query(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
-        $response['Content-Type'] = 'application/json';
-
-        $query = json_decode($request->post('query'), true);
+        $query = json_decode($request->getParam('query'), true);
         $error = array();
         if (is_null($query)) {
             $error['query'] = json_last_error();
         }
 
-        $retrieve = json_decode($request->post('retrieve'), true);
+        $retrieve = json_decode($request->getParam('retrieve'), true);
         if (is_null($retrieve)) {
             $error['retrieve'] = json_last_error();
         }
@@ -58,11 +60,12 @@ class CustomController extends Controller
             return $response->body($json);
         }
 
-        $perPage = $this->app->config('page.limit');
+        $perPage = $this->config('page.limit');
 
         $res = $this->profiles->query($query, $retrieve)
             ->limit($perPage);
         $r = iterator_to_array($res);
-        return $response->body(json_encode($r));
+
+        return $response->withJson($r);
     }
 }

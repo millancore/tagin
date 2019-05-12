@@ -114,16 +114,16 @@ class ServiceContainer extends Container
      */
     protected function _controllers()
     {
-        $this['watchController'] = function ($container) {
-            return new Xhgui_Controller_Watch($container['app'], $container['watchFunctions']);
+        $this['WatchController'] = function ($container) {
+            return new Controller\WatchController($container['app'], $container['watchFunctions']);
         };
 
         $this['RunController'] = function ($container) {
             return new Controller\RunController($container['app'], $container['profiles'], $container['watchFunctions']);
         };
 
-        $this['customController'] = function ($container) {
-            return new Xhgui_Controller_Custom($container['app'], $container['profiles']);
+        $this['CustomController'] = function ($container) {
+            return new Controller\CustomController($container['app'], $container['profiles']);
         };
 
         $this['waterfallController'] = function ($container) {

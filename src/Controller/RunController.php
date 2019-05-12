@@ -12,10 +12,8 @@ use Tagin\WatchFunctions;
 class RunController extends Controller
 {
     const FILTER_ARGUMENT_NAME = 'filter';
-    
 
     private $profiles;
-
 
     private $watches;
 
@@ -322,13 +320,12 @@ class RunController extends Controller
         $this->render($response);
     }
 
-    public function symbolShort()
+    public function symbolShort(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $id = $request->get('id');
-        $threshold = $request->get('threshold');
-        $symbol = $request->get('symbol');
-        $metric = $request->get('metric');
+        $id = $request->getParam('id');
+        $threshold = $request->getParam('threshold');
+        $symbol = $request->getParam('symbol');
+        $metric = $request->getParam('metric');
 
         $profile = $this->profiles->get($id);
         $profile->calculateSelf();
@@ -343,6 +340,8 @@ class RunController extends Controller
             'current' => $current,
             'children' => $children,
         ));
+
+        $this->render($response);
     }
 
     public function callgraph(Request $request, Response $response)
@@ -369,16 +368,13 @@ class RunController extends Controller
         return $response->withJson($callgraph);
     }
 
-    public function callgraphDataDot()
+    public function callgraphDataDot(Request $request, Response $response)
     {
-        $request = $this->app->request();
-        $response = $this->app->response();
         $profile = $this->profiles->get($request->get('id'));
-        $metric = $request->get('metric') ?: 'wt';
-        $threshold = (float)$request->get('threshold') ?: 0.01;
+        $metric = $request->getParam('metric') ?: 'wt';
+        $threshold = (float)$request->getParam('threshold') ?: 0.01;
         $callgraph = $profile->getCallgraphNodes($metric, $threshold);
 
-        $response['Content-Type'] = 'application/json';
-        return $response->body(json_encode($callgraph));
+        return $response->withJson($callgraph);
     }
 }

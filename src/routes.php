@@ -70,9 +70,12 @@ $app->get('/run/symbol', function ($request, $response) use ($container, $app) {
     return $app->controller->symbol($request, $response);
 })->setName('run.symbol');
 
-$app->get('/run/symbol/short', function () use ($container, $app) {
-    $app->controller = $container['runController'];
-    $app->controller->symbolShort();
+/**
+ * View Symbol short
+ */
+$app->get('/run/symbol/short', function ($request, $response) use ($container, $app) {
+    $app->controller = $container['RunController'];
+    return $app->controller->symbolShort($request, $response);
 })->setName('run.symbol-short');
 
 
@@ -92,8 +95,12 @@ $app->get('/run/callgraph/data', function ($request, $response) use ($container,
     return $app->controller->callgraphData($request, $response);
 })->setName('run.callgraph.data');
 
-$app->get('/run/callgraph/dot', function () use ($container, $app) {
-    $container['runController']->callgraphDataDot();
+/**
+ * Get Callgraph dot
+ */
+$app->get('/run/callgraph/dot', function ($request, $response) use ($container, $app) {
+    $app->controller = $container['runController'];
+    return $app->controller->callgraphDataDot($request, $response);
 })->setName('run.callgraph.dot');
 
 // Import route
@@ -104,13 +111,13 @@ $app->post('/run/import', function () use ($container, $app) {
 
 
 // Watch function routes.
-$app->get('/watch', function () use ($container, $app) {
-    $app->controller = $container['watchController'];
-    $app->controller->get();
+$app->get('/watch', function ($request, $response) use ($container, $app) {
+    $app->controller = $container['WatchController'];
+    return $app->controller->get($request, $response);
 })->setName('watch.list');
 
-$app->post('/watch', function () use ($container) {
-    $container['watchController']->post();
+$app->post('/watch', function ($request, $response) use ($container) {
+    return $container['WatchController']->post($request, $response);
 })->setName('watch.save');
 
 
@@ -120,9 +127,13 @@ $app->get('/custom', function () use ($container, $app) {
     $app->controller->get();
 })->setName('custom.view');
 
-$app->get('/custom/help', function () use ($container, $app) {
-    $app->controller = $container['customController'];
-    $app->controller->help();
+
+/**
+ * View Custom Help
+ */
+$app->get('/custom/help', function ($request, $response) use ($container, $app) {
+    $app->controller = $container['CustomController'];
+    return $app->controller->help($request, $response);
 })->setName('custom.help');
 
 $app->post('/custom/query', function () use ($container) {

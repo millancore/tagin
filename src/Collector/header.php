@@ -42,7 +42,7 @@ $dir = dirname(__DIR__);
 
 require_once TAJIN_HEADER . '/src/Config.php';
 
-if (TAGIN_TEST) {
+if (defined(TAGIN_TEST)) {
     require_once TAJIN_HEADER . '/src/Collector/testClassLoader.php';
 }
 
