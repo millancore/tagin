@@ -50,7 +50,7 @@ Restart Apache or PHP-FPM.
 
 7. Run `composer install` to install dependencies.
 
-8. Run `composer start` and enjoy to Tagin on http://localhost:8080.
+8. Run `composer start` and enjoy to profiling on http://localhost:8080.
 
 How to Collect profile data
 ===========================
