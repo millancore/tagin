@@ -52,7 +52,7 @@ Restart Apache or PHP-FPM.
 
 8. Run `composer start` and enjoy to profiling on http://localhost:8080.
 
-How to Collect profile data
+How to collect profile data
 ===========================
 
 The simplest way to profile an application is to use `external/header.php` is designed to be combined with PHP's
@@ -96,7 +96,7 @@ require '/path/to/tagin/external/header.php';
 You can alternatively use the `-d` flag when running php:
 
 ```bash
-php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
+php -d auto_prepend_file=/path/to/tagin/external/header.php do_work.php
 ```
 
 
@@ -104,9 +104,9 @@ php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
 License
 =======
 
-Copyright (c) 2019 Millancore
+Tagin Copyright (c) 2019 Millancore
 
-Copyright (c) 2013 Mark Story & Paul Reinheimer
+Xhgui Copyright (c) 2013 Mark Story & Paul Reinheimer
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
