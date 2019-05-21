@@ -35,13 +35,20 @@ $app->post('/run/delete', function ($request, $response) use ($container, $app) 
     return $app->controller->deleteSubmit($request, $response);
 })->setName('run.delete.submit');
 
-$app->get('/run/delete_all', function () use ($container, $app) {
-    $app->controller = $container['runController'];
-    $app->controller->deleteAllForm();
+
+/**
+ * Delete all profiles form
+ */
+$app->get('/run/delete_all', function ($request, $response) use ($container, $app) {
+    $app->controller = $container['RunController'];
+    return $app->controller->deleteAllForm($request, $response);
 })->setName('run.deleteAll.form');
 
-$app->post('/run/delete_all', function () use ($container, $app) {
-    $container['runController']->deleteAllSubmit();
+/**
+ * Delete all profiles submit
+ */
+$app->post('/run/delete_all', function ($request, $response) use ($container, $app) {
+    return $container['RunController']->deleteAllSubmit($request, $response);
 })->setName('run.deleteAll.submit');
 
 /**

@@ -42,10 +42,6 @@ $dir = dirname(__DIR__);
 
 require_once TAJIN_HEADER . '/src/Config.php';
 
-if (defined(TAGIN_TEST)) {
-    require_once TAJIN_HEADER . '/src/Collector/testClassLoader.php';
-}
-
 $configDir = defined('XHGUI_CONFIG_DIR') ? XHGUI_CONFIG_DIR : $dir . '/config/';
 
 

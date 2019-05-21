@@ -137,6 +137,15 @@ nav .brand {
 }
 
 /**
+ * Index
+ */
+
+.hero-unit {
+    background-color: #3c3f41;
+}
+
+
+/**
  * Search bar/box
  */
 .searchbar {
@@ -398,8 +407,8 @@ tr .no-results {
     position: fixed;
     top: 0;
     left: -40%;
+    background-color: #3c3f41;
     z-index: 1020;
-    background: #fff;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
     transition: left 0.25s ease-out;
 }

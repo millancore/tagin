@@ -168,26 +168,26 @@ class RunController extends Controller
         // Delete the profile run.
         $delete = $this->profiles->delete($id);
 
-        $this->app->flash('success', 'Deleted profile ' . $id);
+        //$this->app->flash('success', 'Deleted profile ' . $id);
 
-        $this->app->redirect($this->app->urlFor('home'));
+        return $response->withRedirect('/');
     }
 
-    public function deleteAllForm()
+    public function deleteAllForm(Request $request, Response $response)
     {
         $this->_template = 'runs/delete-all-form.twig';
+
+        $this->render($response);
     }
 
-    public function deleteAllSubmit()
+    public function deleteAllSubmit(Request $request, Response $response)
     {
-        $request = $this->app->request();
-
         // Delete all profile runs.
         $delete = $this->profiles->truncate();
 
-        $this->app->flash('success', 'Deleted all profiles');
+        //$this->app->flash('success', 'Deleted all profiles');
 
-        $this->app->redirect($this->app->urlFor('home'));
+        return $response->withRedirect('/');
     }
 
     public function url(Request $request, Response $response)
